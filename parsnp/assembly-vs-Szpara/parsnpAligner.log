@@ -1,0 +1,284 @@
+Number of sequences analyzed:        43
+
+Sequence 1 : ../../../reference/HSV1_17_NC_001806.2.gb.fna
+HSV1_17_NC_001806.2.gb.fna
+Length:    152222 bps
+ GC:  103969.0
+ AT:   48253.0
+Sequence 2 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585498_E08.fa
+HM585498_E08.fa
+Length:    135539 bps
+ GC:   90722.0
+ AT:   43917.0
+Sequence 3 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF13.iva.herpesvir.binned.fa
+HSV1-nCSF13.iva.herpesvir.binned.fa
+Length:    127011 bps
+ GC:   81299.0
+ AT:   40442.0
+Sequence 4 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF6.iva.herpesvir.binned.fa
+HSV1-nCSF6.iva.herpesvir.binned.fa
+Length:    118577 bps
+ GC:   76102.0
+ AT:   37515.0
+Sequence 5 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF2.iva.herpesvir.binned.fa
+HSV1-CSF2.iva.herpesvir.binned.fa
+Length:    117859 bps
+ GC:   75876.0
+ AT:   37953.0
+Sequence 6 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585499_E10.fa
+HM585499_E10.fa
+Length:    135510 bps
+ GC:   90540.0
+ AT:   43970.0
+Sequence 7 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF13.consensus.fa.bak
+HSV1-CSF13.consensus.fa.bak
+Length:    152212 bps
+ GC:  103980.0
+ AT:   48232.0
+Sequence 8 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585497_E07.fa
+HM585497_E07.fa
+Length:    135520 bps
+ GC:   90722.0
+ AT:   43898.0
+Sequence 9 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585509_E03.fa
+HM585509_E03.fa
+Length:    135658 bps
+ GC:   91230.0
+ AT:   44028.0
+Sequence 10 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF10.iva.herpesvir.binned.fa
+HSV1-nCSF10.iva.herpesvir.binned.fa
+Length:    125722 bps
+ GC:   82295.0
+ AT:   40637.0
+Sequence 11 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF12.mspades.herpesvir.binned.fa
+HSV1-CSF12.mspades.herpesvir.binned.fa
+Length:    130118 bps
+ GC:   81713.0
+ AT:   40965.0
+Sequence 12 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF4.iva.herpesvir.binned.fa
+HSV1-CSF4.iva.herpesvir.binned.fa
+Length:    119378 bps
+ GC:   73911.0
+ AT:   37407.0
+Sequence 13 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF4.mspades.herpesvir.binned.fa
+HSV1-nCSF4.mspades.herpesvir.binned.fa
+Length:    130006 bps
+ GC:   84579.0
+ AT:   42017.0
+Sequence 14 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//GU734772_H129.fa
+GU734772_H129.fa
+Length:    135612 bps
+ GC:   90799.0
+ AT:   44014.0
+Sequence 15 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585515_R62.fa
+HM585515_R62.fa
+Length:    135544 bps
+ GC:   90626.0
+ AT:   44018.0
+Sequence 16 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585510_E14.fa
+HM585510_E14.fa
+Length:    135588 bps
+ GC:   91103.0
+ AT:   43985.0
+Sequence 17 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF15.iva.herpesvir.binned.fa
+HSV1-nCSF15.iva.herpesvir.binned.fa
+Length:    125238 bps
+ GC:   81436.0
+ AT:   40702.0
+Sequence 18 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF1.iva.herpesvir.binned.fa
+HSV1-CSF1.iva.herpesvir.binned.fa
+Length:    123223 bps
+ GC:   79983.0
+ AT:   40140.0
+Sequence 19 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF10.mspades.herpesvir.binned.fa
+HSV1-CSF10.mspades.herpesvir.binned.fa
+Length:    124014 bps
+ GC:   79754.0
+ AT:   39920.0
+Sequence 20 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//DQ889502_HF10.fa
+DQ889502_HF10.fa
+Length:    131647 bps
+ GC:   88338.0
+ AT:   42961.0
+Sequence 21 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585502_E13.fa
+HM585502_E13.fa
+Length:    135600 bps
+ GC:   90676.0
+ AT:   43924.0
+Sequence 22 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585511_E19.fa
+HM585511_E19.fa
+Length:    135775 bps
+ GC:   91358.0
+ AT:   44017.0
+Sequence 23 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF14.iva.herpesvir.binned.fa
+HSV1-nCSF14.iva.herpesvir.binned.fa
+Length:    126146 bps
+ GC:   82220.0
+ AT:   40826.0
+Sequence 24 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585506_E25.fa
+HM585506_E25.fa
+Length:    135569 bps
+ GC:   90574.0
+ AT:   43995.0
+Sequence 25 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585514_R11.fa
+HM585514_R11.fa
+Length:    135579 bps
+ GC:   90696.0
+ AT:   43983.0
+Sequence 26 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585507_E35.fa
+HM585507_E35.fa
+Length:    134296 bps
+ GC:   89781.0
+ AT:   43515.0
+Sequence 27 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF5.iva.herpesvir.binned.fa
+HSV1-CSF5.iva.herpesvir.binned.fa
+Length:    121582 bps
+ GC:   77333.0
+ AT:   38669.0
+Sequence 28 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF11.iva.herpesvir.binned.fa
+HSV1-nCSF11.iva.herpesvir.binned.fa
+Length:    130881 bps
+ GC:   85542.0
+ AT:   42239.0
+Sequence 29 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//JQ730035_McKrae.fa
+JQ730035_McKrae.fa
+Length:    135871 bps
+ GC:   91555.0
+ AT:   44214.0
+Sequence 30 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585505_E23.fa
+HM585505_E23.fa
+Length:    135558 bps
+ GC:   90649.0
+ AT:   44009.0
+Sequence 31 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-CSF3.iva.herpesvir.binned.fa
+HSV1-CSF3.iva.herpesvir.binned.fa
+Length:    119599 bps
+ GC:   73667.0
+ AT:   37252.0
+Sequence 32 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585513_S25.fa
+HM585513_S25.fa
+Length:    135676 bps
+ GC:   91030.0
+ AT:   44146.0
+Sequence 33 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//GU734771_F.fa
+GU734771_F.fa
+Length:    135611 bps
+ GC:   90716.0
+ AT:   43998.0
+Sequence 34 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585508_CR38.fa
+HM585508_CR38.fa
+Length:    135948 bps
+ GC:   91555.0
+ AT:   44093.0
+Sequence 35 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585512_S23.fa
+HM585512_S23.fa
+Length:    135003 bps
+ GC:   90518.0
+ AT:   44020.0
+Sequence 36 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585504_E22.fa
+HM585504_E22.fa
+Length:    135549 bps
+ GC:   90662.0
+ AT:   43987.0
+Sequence 37 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF7.iva.herpesvir.binned.fa
+HSV1-nCSF7.iva.herpesvir.binned.fa
+Length:    130074 bps
+ GC:   84453.0
+ AT:   41591.0
+Sequence 38 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//JQ673480_KOS.fa
+JQ673480_KOS.fa
+Length:    135633 bps
+ GC:   90625.0
+ AT:   44011.0
+Sequence 39 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585500_E11.fa
+HM585500_E11.fa
+Length:    135509 bps
+ GC:   90541.0
+ AT:   43968.0
+Sequence 40 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF1.iva.herpesvir.binned.fa
+HSV1-nCSF1.iva.herpesvir.binned.fa
+Length:    126038 bps
+ GC:   81599.0
+ AT:   40099.0
+Sequence 41 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HSV1-nCSF5.iva.herpesvir.binned.fa
+HSV1-nCSF5.iva.herpesvir.binned.fa
+Length:    127734 bps
+ GC:   83017.0
+ AT:   40997.0
+Sequence 42 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585503_E15.fa
+HM585503_E15.fa
+Length:    135567 bps
+ GC:   90582.0
+ AT:   43985.0
+Sequence 43 : /lustre/scratch118/infgen/team216/mb29/other/hsv1/parsnp/assembly-vs-Szpara/all_genomes//HM585501_E12.fa
+HM585501_E12.fa
+Length:    135577 bps
+ GC:   90783.0
+ AT:   43894.0
+d value:   300
+q value:   30
+
+Mum anchor size:   17.0
+Number of MUM anchors found:   1749
+Number of MUMs found:   9 
+Total MUMs found((Anchors+MUMs)-filtered):   1742
+
+Random MUM length:   1 
+Minimum Cluster length:   21
+Number of MUMs filtered:   16
+Number of Clusters filtered:   16
+
+Number of clusters created:   67
+Average number of MUMs per cluster:   26
+Average cluster length:   1347 bps
+Cluster coverage in sequence 1:   59.3%
+Cluster coverage in sequence 2:   67.1%
+Cluster coverage in sequence 3:   74.2%
+Cluster coverage in sequence 4:   79.5%
+Cluster coverage in sequence 5:   79.3%
+Cluster coverage in sequence 6:   67.1%
+Cluster coverage in sequence 7:   59.3%
+Cluster coverage in sequence 8:   67.1%
+Cluster coverage in sequence 9:   66.8%
+Cluster coverage in sequence 10:   73.5%
+Cluster coverage in sequence 11:   73.6%
+Cluster coverage in sequence 12:   81.1%
+Cluster coverage in sequence 13:   71.3%
+Cluster coverage in sequence 14:   67.0%
+Cluster coverage in sequence 15:   67.1%
+Cluster coverage in sequence 16:   66.8%
+Cluster coverage in sequence 17:   73.9%
+Cluster coverage in sequence 18:   75.2%
+Cluster coverage in sequence 19:   75.5%
+Cluster coverage in sequence 20:   68.8%
+Cluster coverage in sequence 21:   67.1%
+Cluster coverage in sequence 22:   66.7%
+Cluster coverage in sequence 23:   73.4%
+Cluster coverage in sequence 24:   67.1%
+Cluster coverage in sequence 25:   67.1%
+Cluster coverage in sequence 26:   67.7%
+Cluster coverage in sequence 27:   77.8%
+Cluster coverage in sequence 28:   70.7%
+Cluster coverage in sequence 29:   66.5%
+Cluster coverage in sequence 30:   67.0%
+Cluster coverage in sequence 31:   81.4%
+Cluster coverage in sequence 32:   66.8%
+Cluster coverage in sequence 33:   67.0%
+Cluster coverage in sequence 34:   66.6%
+Cluster coverage in sequence 35:   67.1%
+Cluster coverage in sequence 36:   67.1%
+Cluster coverage in sequence 37:   71.6%
+Cluster coverage in sequence 38:   67.1%
+Cluster coverage in sequence 39:   67.1%
+Cluster coverage in sequence 40:   74.2%
+Cluster coverage in sequence 41:   72.8%
+Cluster coverage in sequence 42:   67.1%
+Cluster coverage in sequence 43:   67.1%
+Total coverage among all sequences:   68.4%
+
+ MUM anchor search elapsed time:   2.0s 
+ MUM coarsening elapsed time:   0.0s 
+ MUM filtering elapsed time:   0.0s 
+ MUM clustering elapsed time:   0.0s 
+ Inter-clustering elapsed time:   0.0s 
+ Total running time:   2.0s 
