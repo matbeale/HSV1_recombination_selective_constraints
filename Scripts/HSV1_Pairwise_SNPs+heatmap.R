@@ -107,40 +107,55 @@ patient.sample$order <- c(1:nrow(patient.sample))
 colnames(patient.sample) <- c("patient","seqname","order")
 patient.sample$order <- factor(patient.sample$order,as.character(patient.sample$order))
 
-#patient.sample$color <- c("#771155", "#AA4488", "#CC99BB", "#114477", "#4477AA", "#77AADD", "#117777", "#44AAAA", "#77CCCC", "#117744", "#44AA77", "#88CCAA", "#777711", "#AAAA44",  "#774411", "#AA7744", "#DDAA77", "#771122", "#DD7788")
-
-
 sites.columns.uk2 <- merge(sites.columns.uk2, patient.sample, by.x="Species.1", by.y="seqname")
 colnames(sites.columns.uk2)[5] <- "order.S1"
 
 sites.columns.uk2 <- merge(sites.columns.uk2, patient.sample, by.x="Species.2", by.y="seqname") 
-#colnames(sites.columns.uk2)[7] <- colnames(sites.columns.uk2)[5]
-#sites.columns.uk2[,7]<- rev(sites.columns.uk2[,7])
-
-#colnames(sites.columns.uk2)[11] <- "order.S2"
 colnames(sites.columns.uk2)[7] <- "order.S2"
 
 sites.columns.uk2 <- sites.columns.uk2[with(sites.columns.uk2,order(order.S1,order.S2)),]
-#sites.columns.uk2$Species.1 <- factor(sites.columns.uk2$Species.1,as.character(sites.columns.uk2$Species.1))
-#sites.columns.uk2$Species.2 <- factor(sites.columns.uk2$Species.2,as.character(sites.columns.uk2$Species.2))
 
-
-sites.columns.uk2$Species.1 <- factor(sites.columns.uk2$Species.1, levels=(sites.columns.uk2$Species.1)[order(sites.columns.uk2$order.S1)])
-sites.columns.uk2$Species.2 <- factor(sites.columns.uk2$Species.2, levels=(sites.columns.uk2$Species.2)[order(sites.columns.uk2$order.S2)])
-
-
+#sites.columns.uk2$Species.1 <- factor(sites.columns.uk2$Species.1, levels=(sites.columns.uk2$Species.1)[order(sites.columns.uk2$order.S1)])
+sites.columns.uk2$Species.1 <- factor(sites.columns.uk2$Species.1, levels=unique((sites.columns.uk2$Species.1)[order(sites.columns.uk2$order.S1)]))
+#sites.columns.uk2$Species.2 <- factor(sites.columns.uk2$Species.2, levels=(sites.columns.uk2$Species.2)[order(sites.columns.uk2$order.S2)])
+sites.columns.uk2$Species.2 <- factor(sites.columns.uk2$Species.2, levels=unique((sites.columns.uk2$Species.2)[order(sites.columns.uk2$order.S2)]))
 
 
 
-p4 <- ggplot(sites.columns.uk2, aes(Species.1, Species.2))
-p4 <- p4 +  geom_tile(aes(fill=Dist), color="white") +
+sites.columns.uk2$Species.1 <- gsub("CSF","CSF",gsub("nCSF","SWAB",sites.columns.uk2$Species.1))
+sites.columns.uk2$Species.2 <- gsub("CSF","CSF",gsub("nCSF","SWAB",sites.columns.uk2$Species.2))
+
+man.x.order <- c("HSV1-SWAB4","HSV1-SWAB1","HSV1-SWAB3","HSV1-SWAB5","HSV1-SWAB6","HSV1-SWAB7","HSV1-SWAB8","HSV1-SWAB9","HSV1-SWAB10","HSV1-SWAB11","HSV1-SWAB13","HSV1-SWAB14","HSV1-SWAB15",
+                 "HSV1-CSF1","HSV1-CSF2","HSV1-CSF3","HSV1-CSF4","HSV1-CSF7","HSV1-CSF8","HSV1-CSF5","HSV1-CSF6","HSV1-CSF10","HSV1-CSF12","HSV1-CSF13")
+
+man.y.order <- c("HSV1-SWAB4","HSV1-SWAB1","HSV1-SWAB3","HSV1-SWAB5","HSV1-SWAB6","HSV1-SWAB7","HSV1-SWAB8","HSV1-SWAB9","HSV1-SWAB10","HSV1-SWAB11","HSV1-SWAB13","HSV1-SWAB14","HSV1-SWAB15",
+                 "HSV1-CSF1","HSV1-CSF2","HSV1-CSF3","HSV1-CSF4","HSV1-CSF7","HSV1-CSF8","HSV1-CSF5","HSV1-CSF6","HSV1-CSF10","HSV1-CSF12","HSV1-CSF13")
+
+
+
+#man.x.order <- c("HSV1-nCSF4","HSV1-nCSF1","HSV1-nCSF3","HSV1-nCSF5","HSV1-nCSF6","HSV1-nCSF7","HSV1-nCSF8","HSV1-nCSF9","HSV1-nCSF10","HSV1-nCSF11","HSV1-nCSF13","HSV1-nCSF14","HSV1-nCSF15","HSV1-CSF1","HSV1-CSF2","HSV1-CSF3","HSV1-CSF4","HSV1-CSF7","HSV1-CSF8","HSV1-CSF5","HSV1-CSF6","HSV1-CSF10","HSV1-CSF12","HSV1-CSF13")
+#man.y.order <- c("HSV1-nCSF4","HSV1-nCSF1","HSV1-nCSF3","HSV1-nCSF5","HSV1-nCSF6","HSV1-nCSF7","HSV1-nCSF8","HSV1-nCSF9","HSV1-nCSF10","HSV1-nCSF11","HSV1-nCSF13","HSV1-nCSF14","HSV1-nCSF15",    "HSV1-CSF1","HSV1-CSF2","HSV1-CSF3","HSV1-CSF4","HSV1-CSF7","HSV1-CSF8","HSV1-CSF5","HSV1-CSF6","HSV1-CSF10","HSV1-CSF12","HSV1-CSF13")
+
+
+sites.columns.uk2$Species.1 <- factor(sites.columns.uk2$Species.1, levels=man.x.order)
+sites.columns.uk2$Species.2 <- factor(sites.columns.uk2$Species.2, levels=man.y.order)
+
+
+
+
+
+
+
+p4 <- ggplot(sites.columns.uk2, aes(Species.1, Species.2)) +
+  geom_tile(aes(fill=Dist), color="white") +
   scale_fill_gradient(low="yellow",high="red", name="Pairwise\nSNPs") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5), axis.title.x = element_blank(),
         axis.title.y = element_blank()) +
   geom_text(aes(label = Dist), color = "black", size = 1.5) +
-  coord_fixed()#geom_text(aes(label = SNPs), color = "black", size = 3) +
+  coord_fixed() + #geom_text(aes(label = SNPs), color = "black", size = 3) +
   theme(text = element_text(size=6)) +
-  coord_fixed()
+  #coord_fixed()
+  NULL
 p4  
 
 Cairo(file=paste(basedropbox,"/UCL_Pathseek/HSV1/Ref_based/0.5_Snippy-cuttoff/SNP_stats/HSV1-GoodCov_Core_Pairwise_Sites_ggplot-heatmaptile-2ordered.png",sep="") , width = 400, height = 300,type="png",dpi=600, units = "pt")
@@ -156,13 +171,15 @@ colnames(samples.colors) <- c("sample","color")
 samples.colors <- data.frame(cbind(samples.colors,samples.colors$color[c(2:nrow(samples.colors),1)]),stringsAsFactors = F)
 colnames(samples.colors) <- c("sample","colorx","colory")
 
+samples.colors$sample <- gsub("nCSF","SWAB",samples.colors$sample)
+
 
 #p4 + theme(axis.text.x = element_text(color=samples.colors$color))#, axis.text.y = element_text(samples.colors$color[c(2:nrow(samples.colors),1)]))
 #p4 + theme( axis.text.y = element_text(samples.colors$color[c(2:nrow(samples.colors),1)]))
 
 p4 <- p4 + theme(axis.text.x = element_text(color=samples.colors$colorx), axis.text.y = element_text(color=samples.colors$colorx))
 
-Cairo(file=paste(basedropbox,"/UCL_Pathseek/HSV1/Ref_based/0.5_Snippy-cuttoff/SNP_stats/HSV1-GoodCov_Core_Pairwise_Sites_ggplot-heatmaptile-2ordered-coloured.png",sep="") , width = 400, height = 300,type="png",dpi=600, units = "pt")
-p4
+Cairo(file=paste(basedropbox,"/UCL_Pathseek/HSV1/Ref_based/0.5_Snippy-cuttoff/SNP_stats/HSV1-GoodCov_Core_Pairwise_Sites_ggplot-heatmaptile-2ordered-coloured__20190626.png",sep="") , width = 400, height = 300,type="png",dpi=600, units = "pt")
+p4 + theme(text=element_text(size=10))
 dev.off()
 
