@@ -292,3 +292,24 @@ mytree1 %>% gheatmap(gene.aln.windowed.decast,width=3,font=3,color=NULL) +
   #scale_color_manual(breaks=c("Reference", "Variant"),values=c("white", "#F8766D")) +
   scale_fill_manual(breaks=c("Reference", "Variant"),values=c("white", "#F8766D")) + geom_tiplab()
 
+
+
+# PCA on binary matrix
+gene.aln.binary.mat <- gene.aln.binary[,c(1:(ncol(gene.aln.binary)-1))]
+row.names(gene.aln.binary.mat) <- gene.aln.binary$position
+
+gene.aln.binary.pca <- prcomp(t(data.matrix(gene.aln.binary.mat, rownames.force = NA)),center = T)
+gene.aln.binary.pca <- as.data.frame(gene.aln.binary.pca$x)
+gene.aln.binary.pca $Sample <- rownames(gene.aln.binary.pca )
+gene.aln.binary.pca$SampleSet <- ifelse(grepl("SWAB",gene.aln.binary.pca$Sample),"SWAB","CSF")
+gene.aln.binary.pca$SampleSet <- sapply(1:nrow(gene.aln.binary.pca), function(x) ifelse(grepl("NC001806.2_HSV1_s_17",gene.aln.binary.pca$Sample[x]),"Reference",gene.aln.binary.pca$SampleSet[x]))
+
+p.pca <- ggplot(gene.aln.binary.pca,aes(PC1,PC2, color=factor(SampleSet),label=Sample)) + 
+  #geom_point(alpha=0.5) +
+  geom_text() + 
+  theme_bw() +
+  scale_colour_manual(values = c("#009900","black","darkorchid3")) +
+  theme(legend.position="top") + labs(color="Sample Set")
+p.pca
+
+
