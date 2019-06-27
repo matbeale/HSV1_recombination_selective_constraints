@@ -294,6 +294,7 @@ mytree1 %>% gheatmap(gene.aln.windowed.decast,width=3,font=3,color=NULL) +
 
 
 
+##########
 # PCA on binary matrix
 gene.aln.binary.mat <- gene.aln.binary[,c(1:(ncol(gene.aln.binary)-1))]
 row.names(gene.aln.binary.mat) <- gene.aln.binary$position
@@ -304,12 +305,33 @@ gene.aln.binary.pca $Sample <- rownames(gene.aln.binary.pca )
 gene.aln.binary.pca$SampleSet <- ifelse(grepl("SWAB",gene.aln.binary.pca$Sample),"SWAB","CSF")
 gene.aln.binary.pca$SampleSet <- sapply(1:nrow(gene.aln.binary.pca), function(x) ifelse(grepl("NC001806.2_HSV1_s_17",gene.aln.binary.pca$Sample[x]),"Reference",gene.aln.binary.pca$SampleSet[x]))
 
+gene.aln.binary.pca$Sample <- gsub("\\_HSV1","",gsub("HSV1-","",gene.aln.binary.pca$Sample))
+
 p.pca <- ggplot(gene.aln.binary.pca,aes(PC1,PC2, color=factor(SampleSet),label=Sample)) + 
   #geom_point(alpha=0.5) +
-  geom_text() + 
+  geom_text(size=3.5) + 
   theme_bw() +
   scale_colour_manual(values = c("#009900","black","darkorchid3")) +
-  theme(legend.position="top") + labs(color="Sample Set")
+  theme(legend.position="top") + labs(color="Sample Set") 
 p.pca
 
+Cairo(file=paste(genefile,".SNPs-PCA.png", sep="") , width = 600, height = 500,type="png",dpi=600, units = "pt")
+p.pca
+dev.off()
 
+
+# plot tSNE
+library(Rtsne)
+gene.aln.binary.tsne <- Rtsne(t(data.matrix(gene.aln.binary.mat, rownames.force = NA)), dims=2, perplexity=3, verbose=TRUE, max_iter = 500)
+gene.aln.binary.tsne <- as.data.frame(gene.aln.binary.tsne$Y)
+gene.aln.binary.tsne$Sample <- colnames(gene.aln.binary.mat)
+gene.aln.binary.tsne$SampleSet <- ifelse(grepl("SWAB",gene.aln.binary.tsne$Sample),"SWAB","CSF")
+gene.aln.binary.tsne$SampleSet <- sapply(1:nrow(gene.aln.binary.tsne), function(x) ifelse(grepl("NC001806.2_HSV1_s_17",gene.aln.binary.tsne$Sample[x]),"Reference",gene.aln.binary.tsne$SampleSet[x]))
+
+p.tsne <- ggplot(gene.aln.binary.tsne,aes(V1,V2, color=factor(SampleSet),label=Sample)) + 
+  #geom_point(alpha=0.5) +
+  geom_text(size=3.5) + 
+  theme_bw() +
+  scale_colour_manual(values = c("#009900","black","darkorchid3")) +
+  theme(legend.position="top") + labs(color="Sample Set") 
+p.pca
