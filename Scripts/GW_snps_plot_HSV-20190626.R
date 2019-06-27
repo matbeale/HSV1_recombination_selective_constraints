@@ -21,12 +21,14 @@
 
 # Manually specify path to fasta file input
 
-genefile <- "/Users/mb29/Dropbox/UCL_Pathseek/HSV1/Ref_based/0.5_Snippy-cuttoff/Gubbins/Szpara2014-v4/HSV1_Corededup+Szpara2014_v3_.fas"
+#genefile <- "/Users/mb29/Dropbox/UCL_Pathseek/HSV1/Ref_based/0.5_Snippy-cuttoff/Gubbins/Szpara2014-v4/HSV1_Corededup+Szpara2014_v3_.fas"
+genefile <- "/Users/mb29/hsv1/parsnp/assembly-vs-Szpara/parsnp/all_genomes/iqtree/HSV1-assemblies-vs-Szpara.mafft-add.fa"
+
 #genefile <- "/Users/mb29/Dropbox/UCL_Pathseek/HBV/HBV-Genes/HBVall_S.Snt.fasta"
 #genefile <- "/Users/mb29/Dropbox/UCL_Pathseek/HSV1/Ref_genomes/HSV1_vs_HSV2/HSV1-vs-HSV2_ref.aln.fas"
 #genefile <- "/Users/mb29/Dropbox/UCL_Pathseek/HSV1/Ref_based/raxml/HSV1-snippy-core/CSF_possible-same-patient.fas"
 
-genefile <- "/Users/mb29/Treponema/Lukehart_UoW/MiniProjects1_intrahost/Analysis/Phylo/SLK3a_bwa.aln"
+#genefile <- "/Users/mb29/Treponema/Lukehart_UoW/MiniProjects1_intrahost/Analysis/Phylo/SLK3a_bwa.aln"
 
 ##################
 
@@ -67,23 +69,49 @@ geneseqs <- read.fasta(file=genefile, seqtype="DNA", as.string=T,set.attributes=
 
 # For capturing and relabelling the sequence names to make them pretty (this needs to be customised)
 seqnames <- names(geneseqs)
-
+seqnames <- gsub(".consensus.bak","",gsub(".mspades.herpesvir.binned","",gsub(".iva.herpesvir.binned","",gsub(".fa","",seqnames))))
 
 # Convert sequence alignment file into a dataframe (gene.aln)
 gene.aln <- data.frame(t(as.matrix.alignment(as.alignment(nb=length(seqnames),nam=NULL,seq=geneseqs,com=NULL))), stringsAsFactors = F)
 colnames(gene.aln) <- seqnames
 
 # Only keep samples of interest for HSV1 study
-gene.aln.study <- gene.aln[,c("Reference_Strain-17",colnames(gene.aln)[grepl("CSF",colnames(gene.aln))])]
+#gene.aln.study <- gene.aln[,c("Reference_Strain-17",colnames(gene.aln)[grepl("CSF",colnames(gene.aln))])]
+gene.aln.study <- gene.aln[,c("NC001806.2_HSV1_s_17",colnames(gene.aln)[grepl("CSF",colnames(gene.aln))])]
+
 # Relabel "nCSF" as "SWAB"
 colnames(gene.aln.study) <- gsub("nCSF","SWAB",colnames(gene.aln.study))
 gene.aln <- gene.aln.study
 
+# Remove regions that are only gaps
+gene.aln.nogap <- gene.aln[,c(colnames(gene.aln)[!grepl("NC001806.2_HSV1_s_17",colnames(gene.aln))])]
+gapsites <- data.frame(position=c(1:nrow(gene.aln.nogap)),stringsAsFactors = F)
+gapsites$alleles <- sapply(1:nrow(gapsites), function (x) unique(as.character(gene.aln.nogap[x,])))
+gapsites.gaps <- gapsites[gapsites$alleles=="-",]
+gene.aln.nogap <- gene.aln[gapsites[gapsites$alleles!="-","position"],]
+  
+
+# Identify windows of gaps
+
+#library(dplyr)
+gapsites.windows <- gapsites %>%
+  dplyr::mutate(alleles = ifelse(alleles=="-", 1, 0)) %>%
+  dplyr::group_by(group = cumsum(c(0, diff(alleles) != 0))) %>%
+  dplyr::filter(alleles == 1 & n() > 1) %>%
+  dplyr::summarize("Start.Site"=min(position),
+            "End.Site"=max(position),
+            "Length.of.Run"=n()) %>%
+  dplyr::ungroup() %>%
+  dplyr::select(-matches("group"))
+gapsites.windows <- data.frame(gapsites.windows,stringsAsFactors = F)
+
+
 # Make a binary matrix from the gene alignment
-gene.aln.binary <- numeric(nrow(gene.aln))
-gene.aln.binary <- data.frame(t(rbind(gene.aln.binary,sapply(1:nrow(gene.aln), function(x) sapply(2:ncol(gene.aln), function(y) ifelse(gene.aln[x,y]==gene.aln[x,1],"0","1"))))),stringsAsFactors = F)
+gene.aln.binary <- numeric(nrow(gene.aln.nogap))
+gene.aln.binary <- data.frame(t(rbind(gene.aln.binary,sapply(1:nrow(gene.aln.nogap), function(x) sapply(2:ncol(gene.aln.nogap), function(y) ifelse(gene.aln.nogap[x,y]==gene.aln.nogap[x,1],"0","1"))))),stringsAsFactors = F)
 colnames(gene.aln.binary) <- colnames(gene.aln)
-gene.aln.binary$position <- rownames(gene.aln.binary)
+
+gene.aln.binary$position <- row.names(gene.aln.nogap)
 
 gene.aln.binary.melt <- melt(gene.aln.binary, id.vars="position")
 colnames(gene.aln.binary.melt) <- c("Position","Sequence","Variant")
@@ -104,15 +132,16 @@ p1
 # Aggregate SNPs into sliding windows for larger genomes
 ###
 windowsize <- 1000       # specify size of window
-genomelength <- nrow(gene.aln.binary)
+genomelength <- nrow(gene.aln)
 nwindows <- genomelength/windowsize
 
 # Create a copy of binary matrix and define bins
 gene.aln.binary2 <- gene.aln.binary
+row.names(gene.aln.binary2) <- gene.aln.binary2$position
 gene.aln.binary2$window <- ((trunc(as.numeric(rownames(gene.aln.binary2)) / windowsize,0))*windowsize) # create binning variables and re-label to nearest bin 
 
 # Loop through all sequences, and if there is a SNP (1) within the window, make it a 1
-seqnames2 <- colnames(gene.aln.binary2)[c(1:18)]
+seqnames2 <- colnames(gene.aln.binary2)[c(1:19)]
 seqnames <- seqnames2
 gene.aln.windowed <- unique(gene.aln.binary2$window)
 snps.windowed.counts <- unique(gene.aln.binary2$window)
@@ -156,19 +185,20 @@ snps.windowed.counts.melt <- melt(snps.windowed.counts, id.vars="window")
 colnames(snps.windowed.counts.melt) <- c("Position","Sequence","Count")
 snps.windowed.counts.melt$Position <- as.numeric(snps.windowed.counts.melt$Position)
 # Remove reference (since there are no SNPs of course)
-snps.windowed.counts.melt <- snps.windowed.counts.melt[snps.windowed.counts.melt$Sequence!="Reference_Strain-17",]
+snps.windowed.counts.melt <- snps.windowed.counts.melt[snps.windowed.counts.melt$Sequence!="NC001806.2_HSV1_s_17",]
 # Bring in info about whether it's SWAB or CSF
 snps.windowed.counts.melt$type <- ifelse(grepl("SWAB",snps.windowed.counts.melt$Sequence),"SWAB","CSF")
 
 
 p.SNPdensity <- ggplot(snps.windowed.counts.melt,aes(Position,as.numeric(Count),fill=type)) + 
   geom_bar(stat="identity") +
-  facet_grid(Sequence~., scales="free") +
-  #facet_grid(Sequence~.) + 
-  #coord_cartesian(ylim=c(0,100)) + 
+  #facet_grid(Sequence~., scales="free") +
+  facet_grid(Sequence~.) + 
+  #coord_cartesian(ylim=c(0,100)) +
+  coord_cartesian(xlim=c(0,genomelength)) + 
   theme_bw() + theme(axis.text.x = element_text(angle = -90, hjust = 0, vjust=0.5)) +
   theme(legend.position = "right") + 
-  labs(x=paste0("Genome Position"," (",windowsize," bp windows)"), y="Sequence",fill="Sample Site") +
+  labs(x=paste0("Genome Position"," (",windowsize," bp windows)"), y="SNP count",fill="Sample Site") +
   theme(strip.background = element_blank(),strip.text.y = element_text(angle=0)) + 
   scale_fill_manual(breaks=c("CSF", "SWAB"),values=c("#009900","darkorchid3")) +
   scale_x_continuous(labels = scales::comma,expand = c(0, 0), breaks=seq(0, genomelength, round(genomelength / 15,1 -nchar(ceiling(genomelength / 15))))) +
@@ -177,6 +207,11 @@ p.SNPdensity <- ggplot(snps.windowed.counts.melt,aes(Position,as.numeric(Count),
 p.SNPdensity
 #p2 +coord_cartesian(xlim=c(1800:1900)) # for subsetting a particular part of the plot
 
+
+
+# Show regions of no/poor coverage (gapsites)
+p.SNPdensity <- p.SNPdensity + geom_rect(data=gapsites.windows, aes(xmin=Start.Site, xmax=End.Site, ymin=0, ymax=25), fill="blue", alpha=0.1,inherit.aes=F)
+p.SNPdensity
 
 
 # Bring in gene positions to plot
@@ -193,7 +228,8 @@ genetext <- gene.pos$Gene
 library(gggenes)
 p.genepos <- ggplot(gene.pos,aes(xmin = Start.dir, xmax = End.dir, y = "molecule", fill = Strand)) +
   geom_gene_arrow(arrowhead_width = grid::unit(3, "mm")) + 
-  scale_x_continuous(expand=c(0,0),limits = c(0, 152222),labels = scales::comma,breaks=seq(0, 152222, round(152222 / 15,1 -nchar(ceiling(152222 / 15))))) + 
+  scale_x_continuous(labels = scales::comma,expand = c(0, 0), breaks=seq(0, genomelength, round(genomelength / 15,1 -nchar(ceiling(genomelength / 15))))) +
+  coord_cartesian(xlim=c(0,genomelength)) +
   theme_bw() + theme(legend.position="none") +
   theme( axis.text.y = element_blank(), axis.ticks.y= element_blank()) + labs(y="Genes")
 p.genepos <- p.genepos + geom_text(data=gene.pos, aes(x=midpoint, y="Genes", label=Gene),angle = -90, size=2)
@@ -209,8 +245,9 @@ g.genepos$widths <- g.SNPdensity$widths
 grid.arrange(g.SNPdensity,g.genepos,ncol=1,heights=c(12,1))
 
  
-Cairo(file=paste(genefile,".SNP-density-facetted.png", sep="") , width = 800, height = 1200,type="png",dpi=600, units = "pt")
-p.SNPdensity
+Cairo(file=paste(genefile,".SNP-density-facetted.png", sep="") , width = 1000, height = 1000,type="png",dpi=600, units = "pt")
+#p.SNPdensity
+grid.arrange(g.SNPdensity,g.genepos,ncol=1,heights=c(12,1))
 dev.off()
 
 
