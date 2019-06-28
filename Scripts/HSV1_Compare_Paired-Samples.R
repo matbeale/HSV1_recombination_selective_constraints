@@ -31,9 +31,18 @@ if(!require(grid)){
 #biocLite("GenomicFeatures")
 #biocLite("BSgenome")
 
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#  install.packages("BiocManager")
+#BiocManager::install("VariantAnnotation")
+#BiocManager::install("GenomicFeatures")
+#BiocManager::install("BSgenome")
+#BiocManager::install("limma")
+
 library("VariantAnnotation")
 library("GenomicFeatures")
 library("BSgenome")
+
+linked.vcf.dir <- "/Users/mb29/hsv1/freebayes-vcfs/Linked_Pairs/"
 
 
 Pair1 <- c("HSV1-nCSF1","HSV1-nCSF3")
@@ -41,22 +50,16 @@ Pair2 <- c("HSV1-nCSF10","HSV1-nCSF9")
 Pair3 <- c("HSV1-CSF4","HSV1-CSF7","HSV1-CSF8")
 Pair4 <- c("HSV1-CSF5","HSV1-CSF6")
 
-#pairlist <- c("Pair1", "Pair2","Pair3","Pair4")
-
-#pairlist <- c(Pair1, Pair2,Pair3,Pair4)
-#
-#for (current.pair in pairlist) {
 
 genomelength <- 152222
 myvar.collating <- data.frame(c(1:genomelength),stringsAsFactors = F)
 colnames(myvar.collating) <- "position"
 
 for (currentseq in Pair3) {
-  #seqpath <- sub("HSV1-.+","",vcf.file)
-  #seqname <- sub("^.+HSV1-","HSV1-",vcf.file,perl=T)
-  #seqname <- sub("\\..+$","",seqname,perl=T)
+
+  #vcf <- readVcf(paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/",currentseq,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
+  vcf <- readVcf(paste(linked.vcf.dir,currentseq,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
   
-  vcf <- readVcf(paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/",currentseq,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
   myvcf <- data.frame(info(vcf))
   myvcf$position <- as.numeric(gsub("\\_.+$","",gsub("^.+\\:","", rownames(myvcf),perl=T), perl=T))
   myvcf <- myvcf[,c("position","NS","DP","AN","RO","AO","SRF","SRR","SAF","SAR")]
@@ -114,9 +117,6 @@ for (currentseq in Pair3) {
   myvar.collating <- merge(myvar.collating,myvcf.minors.called, by.x="position",by.y="position",all.x=T)
 }
 
-
-
-
 # strip out positions without any variants in dataset
 myvar.collating[is.na(myvar.collating)]<- 0
 myvar.collating$keep <- sapply(1:nrow(myvar.collating), function(x) sum(myvar.collating[x,2:ncol(myvar.collating)]))
@@ -141,34 +141,38 @@ myvar.minor.melt <- myvar.minor.change[,c(1,grep("altper",colnames(myvar.minor.c
 colnames(myvar.minor.melt) <- gsub(".altper","",colnames(myvar.minor.melt))
 myvar.minor.melt <- melt(myvar.minor.melt, id.vars="position")
 myvar.minor.melt$position <- as.factor(myvar.minor.melt$position)
+# rename nCSF as SWAB
+myvar.minor.melt$variable <- gsub("nCSF","SWAB",myvar.minor.melt$variable)
 
 p.minor <- ggplot(myvar.minor.melt, aes(position,value, group=variable,  fill=variable))
 p.minor <- p.minor + geom_bar(stat="identity") + theme_bw() +
   facet_grid(variable ~ ., scales="free", space="free", drop=T, margins=F) +
   labs(x="Variant position",y="Alt Variant Frequency (%)") + coord_cartesian(ylim=c(2,100)) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust=0.5), legend.position="none")
+  theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust=0.5), legend.position="none", 
+        strip.background = element_rect(fill="white"))
 
-#Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_",current.pair,"_MinorVarSites.png", sep=""), width = 1200, height = 450,type="png",dpi=600, units = "pt")
-Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_","Pair4","_MinorVarSites.png", sep=""), width = 700, height = 300,type="png",dpi=600, units = "pt")
+
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair3","_MinorVarSites.svg", sep=""), width = 700, height = 300, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites.png", sep=""), width = 700, height = 300, type="png",dpi=600, units = "pt")
 p.minor
-#print(p.minor)
-#grid.arrange(gA, gB, nrow = 2, heights=c(4,1))
 dev.off()
 
-#}
 
 
 library("VennDiagram")
 #library("venneuler")
 library("limma")
 library("extrafont")
-#font_import("Arial")
+#font_import()
+
 # Pull out minor var sites
 myvar.minor.venn <- myvar.minor.change[,c(1,grep("altper",colnames(myvar.minor.change)))]
 myvar.minor.venn[myvar.minor.venn > 0] <- 1
 myvar.minor.venn <- data.frame(myvar.minor.venn[2:ncol(myvar.minor.venn)], stringsAsFactors = F)
 colnames(myvar.minor.venn) <- gsub("\\.","-",(gsub(".altper","",colnames(myvar.minor.venn))))
 myvar.minor.vcounts <- vennCounts(myvar.minor.venn)
+# Relabel nCSF as SWAB
+colnames(myvar.minor.vcounts) <- gsub("nCSF","SWAB",colnames(myvar.minor.vcounts))
 
 # 2-way Venn
 grid.newpage()
@@ -179,6 +183,7 @@ myvenn <- draw.pairwise.venn(area2 = sum(myvar.minor.vcounts[2,3],myvar.minor.vc
                              fill = c("coral","cyan"),alpha = c(0.75,0.4), cex = 2,  cat.cex = 1.5,
                              rotation.degree=-90, cat.dist = 0.025,margin = 0.05,cat.pos=c(0,180),
                              #cex.prop=2,#inverted=T,
+                             fontfamily = "Arial", main.fontfamily="Arial",cat.fontfamily="Arial",
                              scaled = T, lty = rep("blank", 2),main="Minor Variant Sites between Pair2", ind=F)
 grid.draw(myvenn)
 
@@ -192,11 +197,13 @@ myvenn <- draw.triple.venn(area1= sum(myvar.minor.vcounts[5,4],myvar.minor.vcoun
                            category = gsub("HSV1-","",colnames(myvar.minor.vcounts)[1:3]),
                            fill = c("coral", "green1","cyan"), alpha = c(0.6,0.3, 0.7), cex = 2,  cat.cex = 1.5,
                            rotation.degree=90, cat.dist = 0.075,margin = 0.05,cat.pos=c(180,0,270),#cat.pos=c(300,60,200),
-                           scaled = T, lty = rep("blank", 3), ind=F, fontfamily="Arial")
+                           fontfamily = "Arial", main.fontfamily="Arial",cat.fontfamily="Arial",
+                           scaled = T, lty = rep("blank", 3), ind=F)
 grid.draw(myvenn)                           
                             
 
-Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_","Pair3","_MinorVarSites_Venn.png", sep=""), width = 430, height = 430,type="png", units = "pt",dpi=900)
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair3","_MinorVarSites_Venn.svg", sep=""), width = 430, height = 430, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair2","_MinorVarSites_Venn.png", sep=""), width = 430, height = 430,type="png", units = "pt",dpi=900)
 grid.draw(myvenn)
 #grid.newpage()
 #draw.pairwise.venn(area1 = sum(myvar.minor.vcounts[2,3],myvar.minor.vcounts[4,3]), area2 = sum(myvar.minor.vcounts[3,3],myvar.minor.vcounts[4,3]), cross.area = myvar.minor.vcounts[4,3], category = colnames(myvar.minor.vcounts)[1:2], fill = c("coral","cyan"),alpha = c(0.75,0.4),scaled = T, lty = rep("blank", 2))
@@ -221,7 +228,7 @@ minorvars.cov <- data.frame(myvar.minor.change$position, stringsAsFactors = F)
 colnames(minorvars.cov) <- "position"
 
 for (currentseq in highcov.names) {  
-  covpath <- "C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/"
+  covpath <- linked.vcf.dir
   seqname <- paste(currentseq,".depth", sep="")
   coverage.called <- read.table(paste(covpath,seqname,sep=""), header=T, stringsAsFactors = F)
   colnames(coverage.called) <- c("ref","position",paste(currentseq,".cov",sep=""))
@@ -258,7 +265,8 @@ p.high.minor <- p.high.minor + geom_bar(stat="identity") + theme_bw() +
 p.high.minor
 
 
-Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov.png", sep=""), width = 800, height = 400,type="png",dpi=600, units = "pt")
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov.svg", sep=""), width = 800, height = 400, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov.png", sep=""), width = 800, height = 400, type="png",dpi=600, units = "pt")
 p.high.minor
 dev.off()
 
@@ -279,8 +287,8 @@ myvenn <- draw.pairwise.venn(area2 = sum(highcov.minorvars.vcounts[2,3],highcov.
 grid.draw(myvenn)
 
 
-#Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov_Venn.png", sep=""), width = 800, height = 800,type="png", units = "pt",dpi=1200, pointsize = 12*1200/72)
-Cairo(file= paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov_Venn.png", sep=""), width = 430, height = 430,type="png", units = "pt",dpi=900)
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov_Venn.svg", sep=""), width = 430, height = 430, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites_pass+",coverage.threshold,"x-cov_Venn.png", sep=""), width = 430, height = 430,type="png", units = "pt",dpi=900)
 grid.draw(myvenn)
 dev.off()
 
@@ -296,7 +304,7 @@ dev.off()
 Pair1.1 <- "HSV1-nCSF1"
 Pair1.2 <- "HSV1-nCSF3"
 
-vcf <- readVcf(paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/",Pair1.1,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
+vcf <- readVcf(paste(linked.vcf.dir,Pair1.1,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
 #vcf <- readVcf(paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/",Pair1.2,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
 
 

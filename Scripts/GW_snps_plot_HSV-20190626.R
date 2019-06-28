@@ -312,7 +312,7 @@ p.pca <- ggplot(gene.aln.binary.pca,aes(PC1,PC2, color=factor(SampleSet),label=S
   geom_text(size=3.5) + 
   theme_bw() +
   scale_colour_manual(values = c("#009900","black","darkorchid3")) +
-  theme(legend.position="top") + labs(color="Sample Set") 
+  theme(legend.position="top") + labs(color="Sample Set", x="DIM1",y="DIM2") 
 p.pca
 
 Cairo(file=paste(genefile,".SNPs-PCA.png", sep="") , width = 600, height = 500,type="png",dpi=600, units = "pt")
