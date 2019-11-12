@@ -49,13 +49,13 @@ Pair1 <- c("HSV1-nCSF1","HSV1-nCSF3")
 Pair2 <- c("HSV1-nCSF10","HSV1-nCSF9")
 Pair3 <- c("HSV1-CSF4","HSV1-CSF7","HSV1-CSF8")
 Pair4 <- c("HSV1-CSF5","HSV1-CSF6")
-
+#/Users/mb29/hsv1/freebayes-vcfs/Linked_Pairs/HSV1-nCSF3-freebayes.5-reads.vcf
+#/Users/mb29/hsv1/freebayes-vcfs/Linked_Pairs/HSV1-nCSF3-freebayes.5-reads.vcf
 
 genomelength <- 152222
 myvar.collating <- data.frame(c(1:genomelength),stringsAsFactors = F)
 colnames(myvar.collating) <- "position"
-
-for (currentseq in Pair3) {
+for (currentseq in Pair2) {
 
   #vcf <- readVcf(paste("C:/Bioinformatics/HSV1_genomes/annotation/snippy_0.5-cutoff/MinorVars/Linked_Pairs/",currentseq,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
   vcf <- readVcf(paste(linked.vcf.dir,currentseq,"-freebayes.5-reads.vcf",sep=""),"NC_001806.2_HSV1_s17")
@@ -150,11 +150,63 @@ p.minor <- p.minor + geom_bar(stat="identity") + theme_bw() +
   labs(x="Variant position",y="Alt Variant Frequency (%)") + coord_cartesian(ylim=c(2,100)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 0.5, vjust=0.5), legend.position="none", 
         strip.background = element_rect(fill="white"))
-
+p.minor
 
 Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair3","_MinorVarSites.svg", sep=""), width = 700, height = 300, type="svg", units = "pt")
 #Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair1","_MinorVarSites.png", sep=""), width = 700, height = 300, type="png",dpi=600, units = "pt")
 p.minor
+dev.off()
+
+
+
+####
+
+# Plot frequency scatter
+current.pair <- Pair2
+current.pair <- gsub("HSV1\\-nCSF","SWAB",current.pair)
+current.pair <- gsub("HSV1\\-CSF","CSF",current.pair)
+
+myvar.minor.change.plotting <- myvar.minor.change[,c(1,3,5)]
+colnames(myvar.minor.change.plotting) <- c("Position","Seq1","Seq2")
+
+p.minor.scatter <- ggplot(myvar.minor.change.plotting, aes(Seq1,Seq2)) +
+  geom_point(alpha=0.5) +
+  theme_bw() + 
+  coord_cartesian(xlim=c(0,100), y=c(0,100)) +
+  labs(x=paste0(current.pair[1]," Alt Variant Frequency (%)"), y=paste0(current.pair[2]," Alt Variant Frequency (%)"))
+p.minor.scatter
+
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair2","_MinorVarSites_scattergraph.svg", sep=""), width = 300, height = 300, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair4","_MinorVarSites_scattergraph.png", sep=""), width = 300, height = 300, type="png",dpi=600, units = "pt")
+p.minor.scatter
+dev.off()
+
+
+###
+
+
+# Plot frequency scatter for 3-way analysis
+current.pair <- Pair3
+current.pair <- gsub("HSV1\\-nCSF","SWAB",current.pair)
+current.pair <- gsub("HSV1\\-CSF","CSF",current.pair)
+
+myvar.minor.change.plotting.3way <- myvar.minor.change[,c(1,3,5,7)]
+colnames(myvar.minor.change.plotting.3way) <- c("Position","Seq1",current.pair[2],current.pair[3])
+
+myvar.minor.change.plotting.3way.melt <- reshape2::melt(myvar.minor.change.plotting.3way[,c(2,3,4)],id.vars="Seq1")
+
+p.minor.scatter.3way <- ggplot(myvar.minor.change.plotting.3way.melt, aes(Seq1,value)) +
+  geom_point(alpha=0.5) +
+  theme_bw() + 
+  coord_cartesian(xlim=c(0,100), y=c(0,100)) +
+  facet_wrap(~variable) +
+  labs(x=paste0(current.pair[1]," Alt Variant Frequency (%)"), y="Pairwise Alt Variant Frequency (%)") +
+  theme(strip.background =element_rect(fill="white"))
+p.minor.scatter.3way
+
+Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair3","_MinorVarSites_scattergraph.svg", sep=""), width = 600, height = 300, type="svg", units = "pt")
+#Cairo(file= paste(linked.vcf.dir,"HSV1_","Pair3","_MinorVarSites_scattergraph.png", sep=""), width = 600, height = 300, type="png",dpi=600, units = "pt")
+p.minor.scatter.3way
 dev.off()
 
 
